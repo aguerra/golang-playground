@@ -9,10 +9,10 @@ import (
 	"io"
 )
 
-func count(r io.Reader, f bufio.SplitFunc) (int, error) {
+func count(r io.Reader, f bufio.SplitFunc) (int64, error) {
 	sc := bufio.NewScanner(r)
 	sc.Split(f)
-	var count int
+	var count int64
 	for sc.Scan() {
 		count++
 	}
@@ -25,23 +25,24 @@ func count(r io.Reader, f bufio.SplitFunc) (int, error) {
 // We adopt the POSIX definition of line: a sequence of zero or more
 // non-newline characters plus a terminating newline character.
 func scanLines(data []byte, atEOF bool) (advance int, token []byte, err error) {
-	if atEOF && len(data) == 0 {
-		return 0, nil, nil
-	}
 	if i := bytes.IndexByte(data, '\n'); i >= 0 {
 		return i + 1, []byte{}, nil
 	}
 	return 0, nil, nil
 }
 
-func CountWords(r io.Reader) (int, error) {
+func CountWords(r io.Reader) (int64, error) {
 	return count(r, bufio.ScanWords)
 }
 
-func CountLines(r io.Reader) (int, error) {
+func CountLines(r io.Reader) (int64, error) {
 	return count(r, scanLines)
 }
 
-func CountBytes(r io.Reader) (int, error) {
-	return count(r, bufio.ScanBytes)
+func CountBytes(r io.Reader) (int64, error) {
+	n, err := io.Copy(io.Discard, r)
+	if err != nil {
+		return n, fmt.Errorf("CountBytes failed: %w", err)
+	}
+	return n, nil
 }

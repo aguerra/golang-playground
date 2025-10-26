@@ -10,7 +10,7 @@ import (
 func TestCountWords(t *testing.T) {
 	var tests = []struct {
 		input string
-		want  int
+		want  int64
 	}{
 		{"", 0},
 		{"one", 1},
@@ -37,7 +37,7 @@ func TestCountWordsErrReader(t *testing.T) {
 func TestCountLines(t *testing.T) {
 	var tests = []struct {
 		input string
-		want  int
+		want  int64
 	}{
 		{"", 0},
 		{"\n", 1},
@@ -69,7 +69,7 @@ func TestCountLinesErrReader(t *testing.T) {
 func TestCountBytes(t *testing.T) {
 	var tests = []struct {
 		input string
-		want  int
+		want  int64
 	}{
 		{"", 0},
 		{"one", 3},
