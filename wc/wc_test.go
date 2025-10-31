@@ -21,7 +21,7 @@ func TestCountWords(t *testing.T) {
 	for _, test := range tests {
 		r := strings.NewReader(test.input)
 		if got, err := CountWords(r); got != test.want || err != nil {
-			t.Errorf("CountWords(%q) = %v %v, want %v", test.input, got, err, test.want)
+			t.Errorf("CountWords(%q) = %v, %v; want %v, nil", test.input, got, err, test.want)
 		}
 	}
 }
@@ -30,7 +30,7 @@ func TestCountWordsErrReader(t *testing.T) {
 	errReader := errors.New("reader error")
 	r := iotest.ErrReader(errReader)
 	if _, err := CountWords(r); !errors.Is(err, errReader) {
-		t.Errorf("CountWords(ErrReader(%q)) = _ %v", errReader, err)
+		t.Errorf("CountWords(ErrReader) = _ %v, want %v", errors.Unwrap(err), errReader)
 	}
 }
 
@@ -53,7 +53,7 @@ func TestCountLines(t *testing.T) {
 	for _, test := range tests {
 		r := strings.NewReader(test.input)
 		if got, err := CountLines(r); got != test.want || err != nil {
-			t.Errorf("CountLines(%q) = %v %v, want %v", test.input, got, err, test.want)
+			t.Errorf("CountLines(%q) = %v, %v; want %v, nil", test.input, got, err, test.want)
 		}
 	}
 }
@@ -62,7 +62,7 @@ func TestCountLinesErrReader(t *testing.T) {
 	errReader := errors.New("reader error")
 	r := iotest.ErrReader(errReader)
 	if _, err := CountLines(r); !errors.Is(err, errReader) {
-		t.Errorf("CountLines(ErrReader(%q)) = _ %v", errReader, err)
+		t.Errorf("CountLines(ErrReader) = _ %v, want %v", errors.Unwrap(err), errReader)
 	}
 }
 
@@ -80,7 +80,7 @@ func TestCountBytes(t *testing.T) {
 	for _, test := range tests {
 		r := strings.NewReader(test.input)
 		if got, err := CountBytes(r); got != test.want || err != nil {
-			t.Errorf("CountBytes(%q) = %v %v, want %v", test.input, got, err, test.want)
+			t.Errorf("CountBytes(%q) = %v, %v; want %v nil", test.input, got, err, test.want)
 		}
 	}
 }
@@ -89,6 +89,6 @@ func TestCountBytesErrReader(t *testing.T) {
 	errReader := errors.New("reader error")
 	r := iotest.ErrReader(errReader)
 	if _, err := CountBytes(r); !errors.Is(err, errReader) {
-		t.Errorf("CountBytes(ErrReader(%q)) = _ %v", errReader, err)
+		t.Errorf("CountBytes(ErrReader) = _ %v, want %v", errors.Unwrap(err), errReader)
 	}
 }

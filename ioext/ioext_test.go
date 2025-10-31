@@ -20,7 +20,7 @@ func TestCountingWriter(t *testing.T) {
 		data := []byte(input)
 		sum += int64(len(data))
 		if _, err := cw.Write(data); sum != *count || err != nil {
-			t.Errorf("Write(%q) = _ %v, count %v, want %v", input, err, *count, sum)
+			t.Errorf("Write(%q) = _, %v; count %v, want %v", input, err, *count, sum)
 		}
 	}
 }
