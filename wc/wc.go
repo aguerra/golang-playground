@@ -9,7 +9,7 @@ import (
 	"io"
 )
 
-func count(r io.Reader, f bufio.SplitFunc) (int64, error) {
+func countTokens(r io.Reader, f bufio.SplitFunc) (int64, error) {
 	sc := bufio.NewScanner(r)
 	sc.Split(f)
 	var count int64
@@ -17,7 +17,7 @@ func count(r io.Reader, f bufio.SplitFunc) (int64, error) {
 		count++
 	}
 	if err := sc.Err(); err != nil {
-		return count, fmt.Errorf("count failed: %w", err)
+		return count, fmt.Errorf("countTokens failed: %w", err)
 	}
 	return count, nil
 }
@@ -32,11 +32,11 @@ func scanLines(data []byte, atEOF bool) (advance int, token []byte, err error) {
 }
 
 func CountWords(r io.Reader) (int64, error) {
-	return count(r, bufio.ScanWords)
+	return countTokens(r, bufio.ScanWords)
 }
 
 func CountLines(r io.Reader) (int64, error) {
-	return count(r, scanLines)
+	return countTokens(r, scanLines)
 }
 
 func CountBytes(r io.Reader) (int64, error) {
