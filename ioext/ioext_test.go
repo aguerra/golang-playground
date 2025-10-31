@@ -6,10 +6,10 @@ import (
 	"testing"
 )
 
-type errWriter struct{}
+type errWriter struct{err error}
 
 func (w errWriter) Write(p []byte) (n int, err error) {
-	return 0, errors.New("write failed")
+	return 0, w.err
 }
 
 func TestCountingWriter(t *testing.T) {
@@ -26,10 +26,11 @@ func TestCountingWriter(t *testing.T) {
 }
 
 func TestCountingWriterErrWriter(t *testing.T) {
-	w := errWriter{}
+	errWrapped := errors.New("no such file")
+	w := errWriter{err: errWrapped}
 	cw, _ := CountingWriter(w)
 	input := []byte("hello")
-	if _, err := cw.Write(input); err == nil {
-		t.Errorf("Write(%q) = _ %v, want error ", input, err)
+	if _, err := cw.Write(input); !errors.Is(err, errWrapped) {
+		t.Errorf("Write(%q) = _ %v, want %v ", input, errors.Unwrap(err), errWrapped)
 	}
 }
